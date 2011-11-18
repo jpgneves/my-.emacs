@@ -4,6 +4,7 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  '(gud-gdb-command-name "gdb --annotate=1")
+ '(ido-mode (quote both) nil (ido))
  '(large-file-warning-threshold nil)
  '(safe-local-variable-values (quote ((erlang-indent-level . 2)))))
 (custom-set-faces
@@ -25,9 +26,15 @@
       mac-command-modifier 'meta
       x-select-enable-clipboard t)
 
+
+;; Restore open buffers on startup
+;; (desktop-save-mode 1)
+
 ;; Adding externally defined variables which may contain
 ;; sensitive information - sorry :)
 (load "~/emacs/top-secret.el")
+
+(add-to-list 'load-path "~/emacs/lib")
 
 ;;
 ;; Erlang mode
@@ -104,7 +111,7 @@
 (require 'erc)
 (erc-autojoin-mode t)
 (setq erc-autojoin-channels-alist
-      'my-erc-autojoin-list)
+      my-erc-autojoin-list)
 (erc-track-mode t)
 (setq erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
 				"324" "329" "332" "353" "477"))
@@ -113,10 +120,10 @@
 (defun djcb-erc-start-or-switch ()
   "Connect to ERC or switch to last active buffer"
   (interactive)
-  (if (get-buffer 'my-erc-addr)
+  (if (get-buffer my-erc-addr)
       (erc-track-switch-buffer 1)
     (when (y-or-n-p "Start ERC? ")
-      (erc :server 'my-erc-server
+      (erc :server my-erc-server
            :port 6667
            :nick "joao"
            :full-name "joao.neves"))))
@@ -128,5 +135,11 @@
 (require 'color-theme)
 (eval-after-load "color-theme"
   '(progn
-     (color-theme-initialize)
-     (color-theme-hober)))
+     (color-theme-initialize)))
+(add-to-list 'load-path "~/git/emacs-color-theme-solarized")
+(require 'color-theme-solarized)
+(color-theme-solarized-dark)
+
+;; ido
+(require 'ido)
+(setq ido-enable-flex-matching t)
